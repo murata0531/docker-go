@@ -1,8 +1,13 @@
-FROM golang:latest
+FROM golang:1.15
 
-RUN mkdir /app
+## 作業ディレクトリ
 WORKDIR /app
 
-RUN go get github.com/gin-gonic/gin
-RUN go get github.com/go-sql-driver/mysql
-RUN go get github.com/jinzhu/gorm
+# モジュール管理のファイルをコピー
+COPY app/go.mod .
+COPY app/go.sum .
+
+# 外部パッケージのダウンロード
+RUN go mod download
+
+EXPOSE 9000
