@@ -1,29 +1,11 @@
-version: '3.3'
-
+version: '3'
 services:
-  db-server:
-    image: mysql
-    ports:
-      - "3306:3306"
+  go:
+    build:
+      context: .
+      dockerfile: DockerFile
+    command: /bin/sh -c "go run main.go"
+    stdin_open: true
+    tty: true
     volumes:
-      - "data:/var/lib/mysql"
-      - "data:/var/log/mysql"
-      - "./mysql:/etc/mysql/conf.d"
-      - "./mysql/init:/docker-entrypoint-initdb.d"
-      - "./mysql/log:/var/log/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      
-  app:
-    image: golang:1.8-onbuild
-    ports:
-      - "8080:8080"
-    volumes:
-      - ".src/vendor:/go/src/github.com"
-      - "./src:/go/src/app"
-    depends_on:
-      - db-server
-    command: go run cmd/main.go
-
-volumes:
-  data:
+      - .:/app
